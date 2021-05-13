@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+
+{% block content %}
+
+    <div class="container">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">First name:</label>
+                <input type="text" name="first_name" class="form-control" id="exampleFormControlInput1"
+                       placeholder="name example" value="{{ profile.first_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Last name:</label>
+                <input type="text" name="last_name" class="form-control" id="exampleFormControlInput1"
+                       placeholder="name example" value="{{ profile.last_name }}">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Profile info:</label>
+                <textarea name="profile_info" class="form-control" id="exampleFormControlInput1"
+                          placeholder="name example">{{ profile.profile_info }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Picture</label>
+                <input name="picture" class="form-control" type="file">
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">Save person</button>
+        </form>
+    </div>
+
+{% endblock %}
