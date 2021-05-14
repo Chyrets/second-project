@@ -7,6 +7,7 @@ from django.views.generic import DeleteView
 
 from post.forms import AddPostForm, AddCommentForm
 from post.models import Post, Stream, Likes, Tag, Comment
+from post.permissions import AuthorPermissionMixin
 
 
 class Wall(LoginRequiredMixin, View):
@@ -71,7 +72,7 @@ class PostDetailView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'form': form})
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(AuthorPermissionMixin, DeleteView):
     """
     Delete post
     """

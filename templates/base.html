@@ -26,12 +26,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href={% url 'new_post' %}>New post</a>
                 </li>
-                {#                <li class="nav-item">#}
-                {#                    <a class="nav-link" href={% url 'direct' %}>Direct</a>#}
-                {#                    {% if directs_count %}#}
-                {#                        {{ directs_count }}#}
-                {#                    {% endif %}#}
-                {#                </li>#}
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'direct' %}>Direct</a>
+                    {% if directs_count %}
+                        {{ directs_count }}
+                    {% endif %}
+                </li>
                 {#                <li class="nav-item">#}
                 {#                    <a class="nav-link" href={% url 'show_notifications' %}>Notifications</a>#}
                 {#                    {% if count_notify %}#}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search users..."
+                       aria-label="Search"
+                       value="{{ request.GET.q }}" style="max-width: 250px">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+
+        {% for user in users %}
+            <div class="card mt-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        {% if user.profile.picture %}
+                            <img src="{{ user.profile.picture.url }}" alt="">
+                        {% else %}
+                            <img src="https://via.placeholder.com/110" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p>
+                                <strong>{{ user.profile.first_name }} {{ user.profile.last_name }}</strong>
+                                <small>@{{ user.username }}</small>
+                            </p>
+                            <a href="{% url 'new_chat' user.username %}" class="btn btn-info">Send a message</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

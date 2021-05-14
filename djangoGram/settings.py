@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'authy',
-    'post'
+    'post',
+    'direct'
 ]
 
 MIDDLEWARE = [
