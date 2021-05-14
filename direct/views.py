@@ -1,12 +1,56 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views import View
 
 from direct.models import Message
+
+
+def get_messages(user):
+    """
+    Function for receiving messages
+    :param user:
+    :return:
+    """
+    users = []
+    messages = Message.objects.filter(user=user).values('recipient').annotate(last=Max('date')).order_by('-last')
+    for message in messages:
+        users.append({
+            'user': User.objects.get(pk=message['recipient']),
+            'last': message['last'],
+            'unread': Message.objects.filter(user=user, recipient__pk=message['recipient'], is_read=False).count()
+        })
+    return users
+
+
+def send_message(from_user, to_user, body):
+    """
+    Function for sending messages
+    :param from_user:
+    :param to_user:
+    :param body:
+    :return:
+    """
+    sender_message = Message(
+        user=from_user,
+        sender=from_user,
+        recipient=to_user,
+        body=body,
+        is_read=True
+    )
+    sender_message.save()
+
+    recipient_message = Message(
+        user=to_user,
+        sender=from_user,
+        body=body,
+        recipient=from_user,
+    )
+    recipient_message.save()
+    return sender_message
 
 
 class DirectView(LoginRequiredMixin, View):
@@ -16,22 +60,10 @@ class DirectView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        messages = Message.get_messages(user=user)
+        messages = get_messages(user=user)
         active_direct = None
-        directs = None
-
-        if messages:
-            message = messages[0]
-            active_direct = message['user'].username
-            directs = Message.objects.filter(user=user, recipient=message['user'])
-            directs.update(is_read=True)
-
-            for message in messages:
-                if message['user'].username == active_direct:
-                    message['unread'] = 0
 
         context = {
-            # 'directs': directs,
             'messages': messages,
             'active_direct': active_direct
         }
@@ -46,7 +78,7 @@ class DirectMessageView(LoginRequiredMixin, View):
 
     def get(self, request, username, *args, **kwargs):
         user = request.user
-        messages = Message.get_messages(user=user)
+        messages = get_messages(user=user)
         active_direct = username
         directs = Message.objects.filter(user=user, recipient__username=username)
         directs.update(is_read=True)
@@ -78,7 +110,23 @@ class SendMessageView(LoginRequiredMixin, View):
         body = request.POST.get('body')
 
         to_user = User.objects.get(username=username)
-        Message.send_message(from_user, to_user, body)
+
+        sender_message = Message(
+            user=from_user,
+            sender=from_user,
+            recipient=to_user,
+            body=body,
+            is_read=True
+        )
+        sender_message.save()
+
+        recipient_message = Message(
+            user=to_user,
+            sender=from_user,
+            body=body,
+            recipient=from_user,
+        )
+        recipient_message.save()
 
         return redirect('direct')
 
@@ -121,6 +169,6 @@ class NewChatView(LoginRequiredMixin, View):
             return redirect('user_search')
 
         if from_user != to_user:
-            Message.send_message(from_user, to_user, body)
+            send_message(from_user, to_user, body)
 
         return redirect('direct')
