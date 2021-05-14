@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from post.models import Post, Stream, Tag
+
+admin.site.register(Post)
+admin.site.register(Stream)
+admin.site.register(Tag)
