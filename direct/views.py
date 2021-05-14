@@ -108,25 +108,8 @@ class SendMessageView(LoginRequiredMixin, View):
         from_user = request.user
         username = request.POST.get('to_user')
         body = request.POST.get('body')
-
         to_user = User.objects.get(username=username)
-
-        sender_message = Message(
-            user=from_user,
-            sender=from_user,
-            recipient=to_user,
-            body=body,
-            is_read=True
-        )
-        sender_message.save()
-
-        recipient_message = Message(
-            user=to_user,
-            sender=from_user,
-            body=body,
-            recipient=from_user,
-        )
-        recipient_message.save()
+        send_message(from_user, to_user, body)
 
         return redirect('direct')
 
