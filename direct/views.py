@@ -135,23 +135,3 @@ class SearchUserView(LoginRequiredMixin, View):
             }
 
         return render(request, 'direct/search_user.html', context)
-
-
-class NewChatView(LoginRequiredMixin, View):
-    """
-    Display form for start new chat
-    """
-
-    def get(self, request, username, *args, **kwargs):
-        from_user = request.user
-        body = 'hello!'
-
-        try:
-            to_user = User.objects.get(username=username)
-        except Exception:
-            return redirect('user_search')
-
-        if from_user != to_user:
-            send_message(from_user, to_user, body)
-
-        return redirect('direct')

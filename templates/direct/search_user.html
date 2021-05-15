@@ -28,7 +28,7 @@
                                 <strong>{{ user.profile.first_name }} {{ user.profile.last_name }}</strong>
                                 <small>@{{ user.username }}</small>
                             </p>
-                            <a href="{% url 'new_chat' user.username %}" class="btn btn-info">Send a message</a>
+                            <a href="{% url 'direct_message' user.username %}" class="btn btn-info">Send a message</a>
                         </div>
                     </div>
                 </div>
