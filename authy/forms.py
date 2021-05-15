@@ -33,6 +33,8 @@ class SignupForm(forms.ModelForm):
     """
     User registration form
     """
+    MIN_LENGTH = 8
+
     username = forms.CharField(widget=forms.TextInput(), max_length=30, required=True)
     email = forms.CharField(widget=forms.EmailInput(), max_length=30, required=True)
     password = forms.CharField(widget=forms.PasswordInput(), required=True)
@@ -52,6 +54,14 @@ class SignupForm(forms.ModelForm):
         super(SignupForm, self).clean()
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
+
+        if len(password) < self.MIN_LENGTH:
+            raise forms.ValidationError(f"The password must be at least {self.MIN_LENGTH} characters long.")
+
+        first_isalpha = password[0].isalpha()
+        if all(a.isalpha() == first_isalpha for a in password):
+            raise forms.ValidationError(
+                "The password must contain at least one letter and at least one digit or punctuation character.")
 
         if password != confirm_password:
             self._errors['password'] = self.error_class(["Password don't match. Try again."])
