@@ -58,7 +58,7 @@ class SignupView(View):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             User.objects.create_user(username=username, email=email, password=password)
-            return redirect('wall')
+            return redirect('login')
 
         return render(request, self.template_name, {'form': form})
 

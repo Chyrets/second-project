@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+
+    <div class="container">
+        {% for notification in notify %}
+            {% if notification.notification_type == 1 %}
+
+                <div class="row">
+                    <div class="col-1">
+                        {% if notification.sender.profile.picture %}
+                            <img src="{{ notification.sender.profile.picture.url }}" alt="" width="100px">
+                        {% else %}
+                            <img src="https://via.placeholder.com/100" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="col-2">
+                        <strong class="me-auto">
+                            {{ notification.sender.profile.first_name }} {{ notification.sender.profile.last_name }}
+                        </strong>
+                        <small>@{{ notification.sender.username }}</small>
+                        <p>
+                            Like your post:
+                        </p>
+                        <strong><small>{{ notification.date|naturaltime }}</small></strong>
+                        <p>
+                            <a href="{% url 'delete_notify' notification.id %}" class="btn btn-danger">Delete</a>
+                        </p>
+                    </div>
+                    <div class="col-1">
+                        <img src="{{ notification.post.picture.url }}" alt="" width="100px">
+                    </div>
+                </div>
+
+            {% elif notification.notification_type == 2 %}
+
+                <div class="row">
+                    <div class="col-1">
+                        {% if notification.sender.profile.picture %}
+                            <img src="{{ notification.sender.profile.picture.url }}" alt="" width="100px">
+                        {% else %}
+                            <img src="https://via.placeholder.com/100" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="col-2">
+                        <strong class="me-auto">
+                            {{ notification.sender.profile.first_name }} {{ notification.sender.profile.last_name }}
+                        </strong>
+                        <small>@{{ notification.sender.username }}</small>
+                        Commented:
+                        <p>
+                            {{ notification.text_preview }}
+                        </p>
+                        <strong><small>{{ notification.date|naturaltime }}</small></strong>
+                        <p>
+                            <a href="{% url 'delete_notify' notification.id %}" class="btn btn-danger">Delete</a>
+                        </p>
+                    </div>
+                    <div class="col-1">
+                        <img src="{{ notification.post.picture.url }}" alt="" width="100px">
+                    </div>
+                </div>
+
+            {% elif notification.notification_type == 3 %}
+
+                <div class="row">
+                    <div class="col-1">
+                        {% if notification.sender.profile.picture %}
+                            <img src="{{ notification.sender.profile.picture.url }}" alt="" width="100px">
+                        {% else %}
+                            <img src="https://via.placeholder.com/100" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="col-11">
+                        <strong class="me-auto">
+                            {{ notification.sender.profile.first_name }} {{ notification.sender.profile.last_name }}
+                        </strong>
+                        <small>@{{ notification.sender.username }}</small>
+                        <p>
+                            Start Following you
+                        </p>
+                        <strong><small>{{ notification.date|naturaltime }}</small></strong>
+                        <p>
+                            <a href="{% url 'delete_notify' notification.id %}" class="btn btn-danger">Delete</a>
+                        </p>
+                    </div>
+                </div>
+
+            {% endif %}
+            <hr>
+        {% endfor %}
+    </div>
+
+{% endblock %}

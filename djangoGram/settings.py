@@ -42,7 +42,8 @@ INSTALLED_APPS = [
 
     'authy',
     'post',
-    'direct'
+    'direct',
+    'notification'
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'notification.views.count_notification'
             ],
         },
     },
