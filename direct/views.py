@@ -12,8 +12,8 @@ from direct.models import Message
 def get_messages(user):
     """
     Function for receiving messages
-    :param user:
-    :return:
+    :param user: the user for whom the messages is displayed
+    :return: list of users with whom the user has a chat
     """
     users = []
     messages = Message.objects.filter(user=user).values('recipient').annotate(last=Max('date')).order_by('-last')
@@ -29,10 +29,10 @@ def get_messages(user):
 def send_message(from_user, to_user, body):
     """
     Function for sending messages
-    :param from_user:
-    :param to_user:
-    :param body:
-    :return:
+    :param from_user: from whom the user received the message
+    :param to_user: who got the message
+    :param body: message text
+    :return: message to sender
     """
     sender_message = Message(
         user=from_user,
